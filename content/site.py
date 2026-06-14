@@ -6,6 +6,10 @@ BRAND = "간다GO"
 PHONE = "0508-202-4719"
 PHONE_DISPLAY = "0508-202-4719"
 
+# IndexNow 키 — 빌드 시 루트에 "<KEY>.txt" 키 파일이 생성된다.
+# Bing·Naver·Yandex 등 IndexNow 참여 검색엔진에 즉시 색인 통보할 때 사용한다.
+INDEXNOW_KEY = "074c4beaf3e71261e9e5e5b6df91109a"
+
 # 상단 메뉴 — 하위 메뉴에는 키워드를 반복하지 않고 지역명·역명만 표시한다.
 NAV = [
     ("홈", "/", []),
