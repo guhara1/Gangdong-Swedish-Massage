@@ -229,7 +229,7 @@ PAGE = {
     "desc": "강동 출장마사지·홈타이 예약 전 행정동, 역세권, 이용 기준을 한곳에 정리했습니다.",
     "h1": "강동 출장마사지·홈타이 예약 안내",
     "body": _BODY,
-    "extra_head": _JSONLD,
+    "extra_head": '<meta name="naver-site-verification" content="0d8ec69c61dde00aad16a3ce3ecf1cf9c28d60c1">\n' + _JSONLD,
     "breadcrumb": [],
     "hero": _HERO,
 }
