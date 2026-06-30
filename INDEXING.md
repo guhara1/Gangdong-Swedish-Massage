@@ -1,6 +1,6 @@
 # 색인(인덱싱) 빠르게 되게 하기 — 간다GO
 
-도메인: `https://gangdong-swedish-massage.pages.dev`
+도메인: `https://gangdong-swedish-massage.netlify.app`
 
 이 사이트는 빌드 시 색인용 파일을 자동 생성합니다.
 
@@ -28,7 +28,7 @@
 ## 1. 최초 1회 — 검색엔진 등록
 
 **구글 Search Console** (https://search.google.com/search-console)
-1. 속성 추가 → URL 접두어 → `https://gangdong-swedish-massage.pages.dev`
+1. 속성 추가 → URL 접두어 → `https://gangdong-swedish-massage.netlify.app`
 2. 소유확인(HTML 태그 또는 DNS)
 3. 색인 → Sitemaps → `sitemap.xml` 제출
 

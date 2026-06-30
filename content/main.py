@@ -1,7 +1,7 @@
 # 메인 페이지 — 허브 역할. 모든 키워드를 밀어 넣지 않고 상세 페이지로 연결한다.
 # 실제 오프라인 사업장 주소가 없으므로 LocalBusiness 계열 Schema는 쓰지 않고
 # Organization + WebSite + FAQPage 만 사용한다.
-from .site import BASE_URL, BRAND, PHONE, PHONE_DISPLAY
+from .site import BASE_URL, BRAND, NAVER_VERIFY, PHONE, PHONE_DISPLAY
 from .pricing import PRICING
 
 _JSONLD = f"""<script type="application/ld+json">
@@ -117,16 +117,16 @@ _BODY = f"""
 <section id="areas">
 <h2>지역별 안내</h2>
 <p>지역별 안내는 강동구 대표 동 기준으로 구성됩니다. 각 페이지에서는 해당 생활권의 특징, 가까운 역세권, 방문 전 확인사항, 예약 가능 시간, 어울리는 테마를 동마다 고유한 내용으로 설명합니다. 천호동·성내동 같은 오래된 상권 생활권과 고덕동·상일동·강일동 같은 새 주거지 생활권은 방문 동선과 안내 내용이 서로 다르니, 거주하시거나 머무시는 동을 아래에서 선택해 주세요.</p>
-<ul class="card-grid">
-<li><a href="/gangdong-gu/gangil-dong/">강일동</a></li>
-<li><a href="/gangdong-gu/sangil-dong/">상일동</a></li>
-<li><a href="/gangdong-gu/myeongil-dong/">명일동</a></li>
-<li><a href="/gangdong-gu/godeok-dong/">고덕동</a></li>
-<li><a href="/gangdong-gu/amsa-dong/">암사동</a></li>
-<li><a href="/gangdong-gu/cheonho-dong/">천호동</a></li>
-<li><a href="/gangdong-gu/seongnae-dong/">성내동</a></li>
-<li><a href="/gangdong-gu/gil-dong/">길동</a></li>
-<li><a href="/gangdong-gu/dunchon-dong/">둔촌동</a></li>
+<ul class="link-grid">
+<li><a href="/gangdong-gu/gangil-dong/"><span class="link-card-title">강일동 출장마사지·홈타이</span><span class="link-card-desc">고덕강일지구·강일역 새 주거 생활권</span></a></li>
+<li><a href="/gangdong-gu/sangil-dong/"><span class="link-card-title">상일동 출장마사지·홈타이</span><span class="link-card-desc">상일동역·고덕비즈밸리 업무 생활권</span></a></li>
+<li><a href="/gangdong-gu/myeongil-dong/"><span class="link-card-title">명일동 출장마사지·홈타이</span><span class="link-card-desc">명일역·굽은다리역 학원 생활권</span></a></li>
+<li><a href="/gangdong-gu/godeok-dong/"><span class="link-card-title">고덕동 출장마사지·홈타이</span><span class="link-card-desc">고덕역 재건축 대단지 생활권</span></a></li>
+<li><a href="/gangdong-gu/amsa-dong/"><span class="link-card-title">암사동 출장마사지·홈타이</span><span class="link-card-desc">암사역·한강 생태공원 생활권</span></a></li>
+<li><a href="/gangdong-gu/cheonho-dong/"><span class="link-card-title">천호동 출장마사지·홈타이</span><span class="link-card-desc">천호역 로데오 중심 상권</span></a></li>
+<li><a href="/gangdong-gu/seongnae-dong/"><span class="link-card-title">성내동 출장마사지·홈타이</span><span class="link-card-desc">강동구청역 행정·업무 생활권</span></a></li>
+<li><a href="/gangdong-gu/gil-dong/"><span class="link-card-title">길동 출장마사지·홈타이</span><span class="link-card-desc">길동역·길동사거리 주택 생활권</span></a></li>
+<li><a href="/gangdong-gu/dunchon-dong/"><span class="link-card-title">둔촌동 출장마사지·홈타이</span><span class="link-card-desc">둔촌동역·올림픽파크 재건축 생활권</span></a></li>
 </ul>
 <p>강동구 전체 구조가 궁금하시면 <a href="/gangdong-gu/">강동구 전체 안내</a>에서 한눈에 확인하실 수 있습니다.</p>
 </section>
@@ -134,19 +134,19 @@ _BODY = f"""
 <section id="stations">
 <h2>지하철역 인근 안내</h2>
 <p>지하철역별 안내는 강동구를 지나는 5호선·8호선 주요 역세권을 기준으로 구성합니다. 각 역 페이지에서는 인근 생활권, 주변 대표 동, 예약 가능 시간, 방문 전 준비사항을 설명하며, 출구별 페이지나 역과 테마를 조합한 페이지는 만들지 않습니다. 천호역처럼 5호선과 8호선이 만나는 환승역도 노선별로 나누지 않고 한 페이지로 운영합니다.</p>
-<ul class="card-grid">
-<li><a href="/gangdong-gu/stations/cheonho-station/">천호역</a></li>
-<li><a href="/gangdong-gu/stations/gangdong-station/">강동역</a></li>
-<li><a href="/gangdong-gu/stations/gildong-station/">길동역</a></li>
-<li><a href="/gangdong-gu/stations/gubeundari-station/">굽은다리역</a></li>
-<li><a href="/gangdong-gu/stations/myeongil-station/">명일역</a></li>
-<li><a href="/gangdong-gu/stations/godeok-station/">고덕역</a></li>
-<li><a href="/gangdong-gu/stations/sangildong-station/">상일동역</a></li>
-<li><a href="/gangdong-gu/stations/gangil-station/">강일역</a></li>
-<li><a href="/gangdong-gu/stations/dunchondong-station/">둔촌동역</a></li>
-<li><a href="/gangdong-gu/stations/amsa-station/">암사역</a></li>
-<li><a href="/gangdong-gu/stations/amsa-park-station/">암사역사공원역</a></li>
-<li><a href="/gangdong-gu/stations/gangdong-office-station/">강동구청역</a></li>
+<ul class="link-grid">
+<li><a href="/gangdong-gu/stations/cheonho-station/"><span class="link-card-title">천호역 출장마사지</span><span class="link-card-desc">5·8호선 환승 중심 상권</span></a></li>
+<li><a href="/gangdong-gu/stations/gangdong-station/"><span class="link-card-title">강동역 출장마사지</span><span class="link-card-desc">5호선 천호·길동 사이 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/gildong-station/"><span class="link-card-title">길동역 출장마사지</span><span class="link-card-desc">5호선 길동 주택 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/gubeundari-station/"><span class="link-card-title">굽은다리역 출장마사지</span><span class="link-card-desc">5호선 명일 주거 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/myeongil-station/"><span class="link-card-title">명일역 출장마사지</span><span class="link-card-desc">5호선 명일동 학원 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/godeok-station/"><span class="link-card-title">고덕역 출장마사지</span><span class="link-card-desc">5호선 고덕 재건축 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/sangildong-station/"><span class="link-card-title">상일동역 출장마사지</span><span class="link-card-desc">5호선 하남 방면 거점</span></a></li>
+<li><a href="/gangdong-gu/stations/gangil-station/"><span class="link-card-title">강일역 출장마사지</span><span class="link-card-desc">5호선 강일 새 주거지</span></a></li>
+<li><a href="/gangdong-gu/stations/dunchondong-station/"><span class="link-card-title">둔촌동역 출장마사지</span><span class="link-card-desc">5호선 올림픽파크 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/amsa-station/"><span class="link-card-title">암사역 출장마사지</span><span class="link-card-desc">8호선 암사 한강변 생활권</span></a></li>
+<li><a href="/gangdong-gu/stations/amsa-park-station/"><span class="link-card-title">암사역사공원역 출장마사지</span><span class="link-card-desc">별내선 한강 생태공원 인근</span></a></li>
+<li><a href="/gangdong-gu/stations/gangdong-office-station/"><span class="link-card-title">강동구청역 출장마사지</span><span class="link-card-desc">8호선 성내 행정·업무권</span></a></li>
 </ul>
 </section>
 
@@ -168,6 +168,25 @@ _BODY = f"""
 <li><a href="/themes/couple/">커플 관리</a></li>
 <li><a href="/themes/24hours/">24시간</a></li>
 <li><a href="/themes/overnight/">수면 가능</a></li>
+</ul>
+</section>
+
+<section id="topics">
+<h2>자주 찾는 주제 바로가기</h2>
+<p>방문 마사지를 찾는 분들이 가장 많이 검색하는 주제를 한곳에 모았습니다. 상황에 맞는 키워드를 누르면 관련 안내 페이지로 바로 이동합니다. 지역·역·테마를 조합한 별도 페이지는 만들지 않으므로, 아래 링크에서 원하는 관리 유형을 고른 뒤 예약 시 위치만 알려주시면 됩니다.</p>
+<ul class="topic-links">
+<li><a href="/gangdong-gu/cheonho-dong/">천호동 심야 출장마사지</a></li>
+<li><a href="/themes/swedish/">고덕동 스웨디시 홈타이</a></li>
+<li><a href="/themes/24hours/">강동구 24시간 출장마사지</a></li>
+<li><a href="/themes/overnight/">숙면 아로마 홈타이</a></li>
+<li><a href="/themes/sports/">운동 후 스포츠·경락 관리</a></li>
+<li><a href="/themes/couple/">커플 출장마사지</a></li>
+<li><a href="/themes/thai/">목·어깨 결림 타이마사지</a></li>
+<li><a href="/themes/foot/">한강 라이딩 후 발마사지</a></li>
+<li><a href="/themes/hotel-style/">천호역 숙소 호텔식 마사지</a></li>
+<li><a href="/magazine/parents-gift/">부모님 효도 마사지 가이드</a></li>
+<li><a href="/magazine/swedish-vs-thai/">스웨디시·타이 비교 가이드</a></li>
+<li><a href="/magazine/first-time-guide/">출장마사지 처음 이용 가이드</a></li>
 </ul>
 </section>
 
@@ -229,7 +248,11 @@ PAGE = {
     "desc": "강동 출장마사지·홈타이 예약 전 행정동, 역세권, 이용 기준을 한곳에 정리했습니다.",
     "h1": "강동 출장마사지·홈타이 예약 안내",
     "body": _BODY,
-    "extra_head": '<meta name="naver-site-verification" content="0d8ec69c61dde00aad16a3ce3ecf1cf9c28d60c1">\n' + _JSONLD,
+    "extra_head": (
+        '<meta name="naver-site-verification" content="0d8ec69c61dde00aad16a3ce3ecf1cf9c28d60c1">\n'
+        f'<meta name="naver-site-verification" content="{NAVER_VERIFY}">\n'
+        + _JSONLD
+    ),
     "breadcrumb": [],
     "hero": _HERO,
 }

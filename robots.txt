@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gangdong-swedish-massage.pages.dev/sitemap.xml
+Sitemap: https://gangdong-swedish-massage.netlify.app/sitemap.xml
