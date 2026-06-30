@@ -1,0 +1,15 @@
+# Netlify 배포 설정 — 간다GO 정적 사이트
+#
+# 이 저장소는 build.py 로 생성된 정적 HTML(각 디렉터리의 index.html 등)이
+# 그대로 커밋되어 있으므로, Netlify 는 별도 빌드 없이 루트를 그대로 서빙하면 된다.
+# (콘텐츠를 수정해 다시 빌드하려면 아래 command 주석을 해제)
+
+[build]
+  publish = "."
+  # command = "python3 build.py"
+
+# 디렉터리 접근 시 index.html, 없는 경로는 루트 404.html 을 자동 사용한다.
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
