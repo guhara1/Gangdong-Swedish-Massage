@@ -9,6 +9,7 @@ content/ 패키지의 페이지 정의를 읽어 정적 HTML을 생성한다.
   - 지역+역+테마 조합 경로는 생성 자체가 불가능한 구조
 """
 import html
+import json
 import os
 import re
 import shutil
@@ -21,7 +22,7 @@ from email.utils import format_datetime
 
 from content import PAGES
 from content.site import (BASE_URL, BRAND, INDEXNOW_KEY, NAV, PHONE,
-                          PHONE_DISPLAY)
+                          PHONE_DISPLAY, RATING_COUNT, RATING_VALUE, REVIEWS)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 MIN_INDEX_CHARS = 2000
@@ -128,6 +129,117 @@ def render_toc(items) -> str:
     )
 
 
+def _stars(value) -> str:
+    """평점(문자열/숫자) → 별 5칸 문자열."""
+    v = max(0, min(5, round(float(value))))
+    return "★" * v + "☆" * (5 - v)
+
+
+def render_schema(page: dict, canonical: str) -> str:
+    """모든 페이지 공통 JSON-LD — Service(+AggregateRating+Review) · BreadcrumbList.
+
+    화면에 노출되는 후기 배너와 동일한 평점·후기 데이터를 사용하므로
+    구조화 데이터와 실제 콘텐츠가 항상 일치한다.
+    """
+    brand_url = SITE + "/"
+
+    reviews_ld = [
+        {
+            "@type": "Review",
+            "author": {"@type": "Person", "name": r["author"]},
+            "datePublished": r["date"],
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": r["rating"],
+                "bestRating": "5",
+                "worstRating": "1",
+            },
+            "reviewBody": r["body"],
+        }
+        for r in REVIEWS
+    ]
+
+    service = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "출장마사지·홈타이 방문 관리",
+        "name": page["title"],
+        "url": canonical,
+        "areaServed": {"@type": "AdministrativeArea", "name": "서울특별시 강동구"},
+        "provider": {
+            "@type": "Organization",
+            "name": BRAND,
+            "telephone": PHONE,
+            "url": brand_url,
+            "image": SITE + "/assets/og-image.png",
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": RATING_VALUE,
+            "reviewCount": RATING_COUNT,
+            "bestRating": "5",
+            "worstRating": "1",
+        },
+        "review": reviews_ld,
+    }
+
+    blocks = [service]
+
+    # BreadcrumbList — 홈 + 페이지별 경로 (메인은 단일 항목이라 생략)
+    crumbs = page.get("breadcrumb") or []
+    if crumbs:
+        elements = [{"@type": "ListItem", "position": 1, "name": "홈", "item": brand_url}]
+        for i, (label, href) in enumerate(crumbs, start=2):
+            elements.append({
+                "@type": "ListItem",
+                "position": i,
+                "name": label,
+                "item": (SITE + href) if href else canonical,
+            })
+        blocks.append({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": elements,
+        })
+
+    return "".join(
+        '<script type="application/ld+json">\n'
+        + json.dumps(b, ensure_ascii=False, indent=2)
+        + "\n</script>\n"
+        for b in blocks
+    )
+
+
+def render_reviews_band() -> str:
+    """전 페이지 하단 공통 후기·평점 배너(화면 노출용)."""
+    cards = "".join(
+        '<figure class="review-card">'
+        f'<div class="review-stars" aria-label="별점 {r["rating"]}점">{_stars(r["rating"])}</div>'
+        f"<blockquote>{r['body']}</blockquote>"
+        '<figcaption><span class="review-author">'
+        f'{r["author"]}</span> <span class="review-tags">{r["area"]} · {r["theme"]}</span>'
+        "</figcaption></figure>"
+        for r in REVIEWS[:3]
+    )
+    return f"""<section class="reviews-band" aria-label="고객 후기와 평점">
+  <div class="container">
+    <div class="reviews-head">
+      <div class="reviews-score">
+        <strong class="reviews-score-num">{RATING_VALUE}</strong>
+        <span class="reviews-score-stars" aria-hidden="true">{_stars(RATING_VALUE)}</span>
+        <span class="reviews-score-count">누적 후기 {RATING_COUNT}건</span>
+      </div>
+      <div class="reviews-intro">
+        <h2>이용자 평점 {RATING_VALUE} / 5.0</h2>
+        <p>강동구 전지역 방문 출장마사지·홈타이를 받은 실제 이용자들의 후기입니다. 모든 후기는 이용이 확인된 예약 건에 한해 등록됩니다. <a href="/reviews/">전체 후기 보기 →</a></p>
+      </div>
+    </div>
+    <div class="review-cards">{cards}</div>
+  </div>
+</section>
+"""
+
+
 def render_page(page: dict) -> str:
     path = page["path"]
     title = page["title"]
@@ -188,7 +300,7 @@ def render_page(page: dict) -> str:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/style.css">
-{extra_head}</head>
+{extra_head}{render_schema(page, canonical)}</head>
 <body>
 <header class="site-header">
   <div class="header-accent" aria-hidden="true"></div>
@@ -214,7 +326,7 @@ def render_page(page: dict) -> str:
     </article>
   </div>
 </main>
-<footer class="site-footer">
+{render_reviews_band()}<footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-col footer-about">
       <p class="footer-brand">{BRAND}</p>
